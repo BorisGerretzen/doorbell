@@ -15,7 +15,7 @@ FROM builder AS build-prod
 RUN go build -o /myapp ./app
 FROM scratch AS prod
 COPY --from=build-prod /myapp /myapp
-COPY --from=build-prod /app/app/public /public
+COPY --from=build-prod /app/app/public app/public
 COPY --from=build-prod /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 EXPOSE 9000
 ENTRYPOINT ["/myapp"]

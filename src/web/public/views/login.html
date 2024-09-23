@@ -1,0 +1,43 @@
+{{define "login"}}
+
+{{ template "html" . }}
+
+<div class="container">
+    <div class="row" style="justify-content: center">
+        <!-- center -->
+        <div class="col-md-6 col-12">
+            <div class="d-flex justify-content-center" style="margin-top: 25%">
+                <!--suppress HtmlUnknownTarget -->
+                <img src="/static/icon.png"
+                     alt="icon"
+                     class="img-fluid w-25"/>
+            </div>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-5">
+            <script async src="https://telegram.org/js/telegram-widget.js?22"
+                    data-telegram-login="BorisDoorbellBot" data-size="large"
+                    data-onauth="onTelegramAuth(user)"></script>
+        </div>
+    </div>
+</div>
+
+<script>
+    // noinspection JSUnusedGlobalSymbols
+    const onTelegramAuth = async (user) => {
+        const response = await fetch('/loginTelegram', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user),
+        });
+
+        if (response.status === 200) {
+            window.location.href = '/devices';
+        } else {
+            alert('An error occurred');
+        }
+    };
+</script>
+
+{{end}}

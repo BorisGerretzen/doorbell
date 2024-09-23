@@ -1,0 +1,11 @@
+services:
+  http:
+    volumes:
+      - ./src/web:/app
+      - ./certs:/certs
+    environment:
+      - DEVELOPMENT=true
+    env_file:
+        - dev.env
+    ports:
+      - "80:9000"

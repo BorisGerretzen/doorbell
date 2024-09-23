@@ -1,0 +1,18 @@
+{{ define "error" }}
+
+{{ template "header" . }}
+
+<div class="container">
+    <div class="row" style="justify-content: center">
+        <div class="col-md-6 col-12">
+            <div class="card mt-5">
+                <div class="card-body">
+                    <h2>Oops, something went wrong!</h2>
+                    The error message is: <strong>{{.Error.Message}}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{end}}

@@ -1,0 +1,127 @@
+{{define "devices"}}
+
+{{ template "header" . }}
+
+<div class="container">
+    <div class="row" style="justify-content: center; margin-top: 20px">
+        <div class="col-md-6 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">
+                        <div class="row">
+                            <h4>Your devices</h4>
+                            <div class="mb-3 col-12">
+                                <div class="list-group">
+                                    {{if .devices}}
+                                    {{range $val := .devices}}
+                                    <!--suppress HtmlUnknownTarget -->
+                                    <a href="/devices/{{$val.DeviceName}}"
+                                       class="list-group-item list-group-item-action"
+                                       data-device-name="{{$val.DeviceName}}"
+                                       title="Log into device '{{$val.DeviceName}}'">
+                                        {{$val.DeviceName}}
+                                    </a>
+                                    {{end}}
+                                    {{else}}
+                                    You are not connected to any devices
+                                    {{end}}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button type="button"
+                                        class="btn btn-primary w-100"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addDeviceModal"
+                                        title="Connect to device">
+                                    <i class="oi oi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addDeviceModal" tabindex="-1" role="dialog" aria-labelledby="addDeviceModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addDeviceModalLabel">Connect to device</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-login">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Device name</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="oi oi-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('form-login');
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const deviceName = document.getElementById('username').value;
+            const formData = new FormData(form);
+            const responseLogin = await fetch('/login', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (responseLogin.status !== 200) {
+                switch (responseLogin.status) {
+                    case 400:
+                        alert('Invalid credentials')
+                        break;
+                    case 401:
+                        alert('Invalid credentials')
+                        break;
+                    default:
+                        alert('An error occurred')
+                        break;
+                }
+
+                return
+            }
+
+            const addUserData = new FormData();
+            addUserData.append('chat_id', '{{ .claims.TelegramId }}')
+            addUserData.append('username', '{{ .claims.TelegramUsername }}')
+
+            const responseAddUser = await fetch(`/devices/${deviceName}/users`, {
+                method: 'POST',
+                body: addUserData
+            });
+
+            if (responseAddUser.status !== 200) {
+                alert('An error occurred')
+                return
+            }
+
+            window.location.reload()
+        });
+    });
+</script>
+
+{{end}}

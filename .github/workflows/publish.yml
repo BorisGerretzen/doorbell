@@ -1,0 +1,34 @@
+name: Deploy application
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - docker-compose.yml
+      - docker-compose.prod.yml
+      - .github/workflows/publish.yml
+      - src/web/**
+
+concurrency:
+  group: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_HOST: ${{ secrets.DOCKER_HOST }}
+      TELEGRAM_KEY: ${{ secrets.TELEGRAM_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - name: Docker remote deploy
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml up --force-recreate --build -d
+          docker image prune -f

@@ -1,0 +1,22 @@
+services:
+  http:
+    build:
+      context: src/web
+      dockerfile: Dockerfile
+      target: prod
+    volumes:
+      - certs:/certs
+      - ~/doorbell/db:/db
+    env_file:
+      - prod.env
+    networks:
+      - mqtt-network
+      - nginx-network
+networks:
+  mqtt-network:
+    external: true
+  nginx-network:
+    external: true
+volumes:
+  certs:
+    external: true

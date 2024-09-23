@@ -1,0 +1,12 @@
+services:
+  http:
+    build:
+      context: src/web
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      - "TELEGRAM_KEY=${TELEGRAM_KEY}"
+secrets:
+  telegram_key:
+    # noinspection ComposeUnknownKeys
+    environment: TELEGRAM_KEY

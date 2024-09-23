@@ -1,0 +1,30 @@
+{{ define "header" }}
+
+{{ template "html" . }}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/devices">
+            <!--suppress HtmlUnknownTarget -->
+            <img src="/static/icon.png" width="512" height="512" class="d-inline-block align-top" alt="">
+        </a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <div class="navbar-nav">
+                {{ if .claims.TelegramId }}
+                <a class="nav-item nav-link" href="/devices">My devices</a>
+                {{ end }}
+            </div>
+            <div class="navbar-nav" style="margin-left: auto">
+                <a class="nav-item nav-link" href="/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+{{end}}

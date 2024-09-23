@@ -18,12 +18,12 @@ func RunHttp(services *Services) {
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 
-	e.Static("/static", "public/static")
+	e.Static("/static", "app/public/static")
 
 	// Compile templates
 	setRenderer := func() {
 		e.Renderer = &Template{
-			templates: template.Must(template.ParseGlob("public/views/*.html")),
+			templates: template.Must(template.ParseGlob("app/public/views/*.html")),
 		}
 	}
 	setRenderer()
@@ -126,6 +126,16 @@ func viewDevice(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
+	isRegistered := false
+	if claims.TelegramId != "" {
+		for _, user := range users {
+			if user.ChatId == claims.TelegramId {
+				isRegistered = true
+				break
+			}
+		}
+	}
+
 	// Check if the user is an admin
 	isAdmin, err := services.db.IsAdmin(requestDevice)
 	if err != nil {
@@ -134,9 +144,10 @@ func viewDevice(c echo.Context) error {
 	}
 
 	return c.Render(http.StatusOK, "dash", map[string]interface{}{
-		"users":    users,
-		"isAdmin":  isAdmin,
-		"subtitle": requestDevice,
+		"users":        users,
+		"isAdmin":      isAdmin,
+		"subtitle":     requestDevice,
+		"isRegistered": isRegistered,
 	})
 }
 

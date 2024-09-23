@@ -1,7 +1,7 @@
 # Wifi doorbell
 
 This is a simple project to connect a radio doorbell to the internet and send a notification to users using Telegram.
-The golang webapp listens to topics on a MQTT broker and sends a message to a Telegram bot when a message is received.
+The Go webapp listens to topics on a MQTT broker and sends a message to a Telegram bot when a message is received.
 
 To capture the doorbell signal an ESP32 is combined with a CC1101 433 MHz RF module, when a doorbell signal is detected a message is published to the MQTT broker.
 

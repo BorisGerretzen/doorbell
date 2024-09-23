@@ -6,7 +6,9 @@ To publish a message to the MQTT broker, an ESP32 is combined with a CC1101 RF m
 
 ## How to use
 Make sure you have a MQTT broker running and a Telegram bot created.
-You can then create a `prod.env` file. Make sure to replace the values with your own.
+
+### Docker
+Create a file called `prod.env` as shown below, make sure to replace the values with your own.
 If you don't have certificate authentication enabled on your MQTT broker, you can remove the `MQTT_CA_PATH`, `MQTT_CERT_PATH` and `MQTT_KEY_PATH` variables.
 ```env
 MQTT_HOST=mqtt
@@ -29,4 +31,12 @@ You can then use the docker-compose file to start the webapp.
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up
 ```
-
+### Standalone
+You can also run the webapp standalone. 
+In this case make sure that the settings you would have put in the `prod.env` file are set as environment variables.
+Make sure that the certificate paths are correct.
+```bash
+cd src/web
+go build -o .app ./app
+./app
+```
